@@ -1,0 +1,36 @@
+import os
+
+def move_best_images(shoot_name):
+
+    pictures_root_dir= '/Users/spencervaradi/pictures'
+    #shoot_name = '20221119 | Medellin Dump | City copy'
+    # shoot_name= input('Shoot name: ')
+
+    shoot_dir = f'{pictures_root_dir}/{shoot_name}'
+
+    # get root and extension
+    jpg_keep_dir = shoot_dir+'/jpg/keep/'
+    keep_file_names = []
+    with os.scandir(jpg_keep_dir) as entries:
+        for entry in entries:
+            if entry.is_file:
+                split_tup = os.path.splitext(entry.name)
+                print(split_tup)
+                keep_file_names.append(split_tup[0])
+                f_extension = split_tup[1]
+
+    #keep_file_names_raw = [x+".NEF" for x in keep_file_names]
+    raw_keep_dir = shoot_dir+'/NEF/keep/'
+
+    with os.scandir(shoot_dir+'/NEF/') as entries:
+        for entry in entries:
+            if entry.is_file and os.path.splitext(entry.name)[0] in keep_file_names:
+                #print(entry.name)
+                from_file = shoot_dir+'/NEF/'+entry.name
+                to_file = raw_keep_dir+entry.name
+                print(from_file,to_file)
+                os.replace(from_file, to_file)
+
+if __name__=='__main__':
+    shoot_name = input('Shoot name:')
+    move_best_images(shoot_name)
